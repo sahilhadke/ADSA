@@ -1,4 +1,5 @@
 #include<iostream>
+#include<stack>
 using namespace std;
 
 class node{
@@ -67,7 +68,87 @@ public:
         }
     }
 
+    void inorderNoRec(node *temp);
+    void preorderNoRec(node *temp);
+    void postorderNoRec(node *temp);
+
 };
+
+void BTree::postorderNoRec(node *temp)
+{
+    stack<node*>s1;
+    stack<node*>s2;
+
+    if(temp == NULL)
+        return;
+
+    s1.push(temp);
+
+    while(s1.empty() == false)
+    {
+        node *t = s1.top();
+
+        s1.pop();
+
+        s2.push(t);
+
+        if(t->left != NULL)
+            s1.push(t->left);
+        if(t->right != NULL)
+            s1.push(t->right);
+    }
+
+    while(s2.empty() == false)
+    {
+        cout<<s2.top()->data<<" ";
+        s2.pop();
+    }
+}
+
+void BTree::preorderNoRec(node *temp)
+{
+    if(temp == NULL)
+        return;
+
+    stack<node*> s;
+
+    if(temp != NULL)
+        s.push(temp);
+
+    while(s.empty() == false)
+    {
+        node* t = s.top();
+        s.pop();
+
+        cout<<t->data<<" ";
+
+        if(t->right != NULL)
+            s.push(t->right);
+        if(t->left != NULL)
+            s.push(t->left);
+    }
+}
+
+void BTree::inorderNoRec(node *temp)
+{
+    stack <node*> s;
+    node *current = temp;
+
+    while(current != NULL || s.empty() == false)
+    {
+        while(current != NULL)
+        {
+            s.push(current);
+            current = current->left;
+        }
+
+        current = s.top();
+        s.pop();
+        cout<<current->data<<" ";
+
+        current = current->right;
+    }
+}
 
 int main(){
 
@@ -98,26 +179,25 @@ int main(){
 
             case 2:
                 cout<<"DISPLAYING PREORDER"<<endl;
-                tree.preorder(tree.root);
+                tree.preorderNoRec(tree.root);
                 cout<<endl<<endl;
                 break;
 
             case 3:
                 cout<<"DISPLAYING INORDER"<<endl;
-                tree.inorder(tree.root);
+                tree.inorderNoRec(tree.root);
                 cout<<endl<<endl;
                 break;
 
             case 4:
                 cout<<"DISPLAYING POSTORDER"<<endl;
-                tree.postorder(tree.root);
+                tree.postorderNoRec(tree.root);
                 cout<<endl<<endl;
                 break;
             default:
                 wc = 0;
                 break;
         }
-
     }
 
     return 0;
